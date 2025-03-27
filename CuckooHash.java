@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Nicole Kozuch / Section 002
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -245,14 +245,46 @@ public class CuckooHash<K, V> {
 	 */
 
  	public void put(K key, V value) {
+		// Gets hash location of given key
+		int position1 = hash1(key);
+		int position2 = hash2(key);
+		// Stores given key-value pair in new bucket
+		Bucket<K, V> newBucket = new Bucket<K, V>(key, value);
 
-		// ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME AT TOP OF FILE.
-		// Also make sure you read this method's prologue above, it should help
-		// you. Especially the two HINTS in the prologue.
+		// Checks if key-value pair exists in hashmap
+		if (table[position1] != null && table[position1].getBucKey().equals(key) && table[position1].getValue().equals(value) || 
+			table[position2] != null && table[position2].getBucKey().equals(key) && table[position2].getValue().equals(value)) {
+			return;
+		}
 
-		return;
+		for (int i = 0; i < CAPACITY; i++) {
+			// Adds the key-value pair if current position is empty
+			if (table[position1] == null) {
+				table[position1] = newBucket;
+				return;
+			}
+
+			// Creates a temporary bucket to hold the displaced key-value pair
+			Bucket<K, V> oldBucket = table[position1];
+			// Replaces existing key-value pair with the new one
+			table[position1] = newBucket;
+			newBucket = oldBucket;
+
+			// Searches for next position to place displaced bucket
+			int nextPos = hash1(oldBucket.getBucKey());
+			if (nextPos == position1) {
+				position1 = hash2(oldBucket.getBucKey());
+			} else {
+				position1 = nextPos;
+			}
+		}
+
+		// If capacity is reached, grow hash map
+		rehash();
+		// Recursively calls method after rehashing
+		put(newBucket.getBucKey(), newBucket.getValue());
 	}
-
+		
 
 	/**
 	 * Method get

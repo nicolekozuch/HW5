@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Nicole Kozuch / Section 002
  *
  *   This java file contains the problem solutions of isSubSet, findKthLargest,
  *   and sort2Arrays methods. You should utilize the Java Collection Framework for
@@ -31,10 +31,22 @@ class ProblemSolutions {
      */
 
     public boolean isSubset(int list1[], int list2[]) {
+        Set<Integer> setA = new HashSet<>();
 
-        // ADD YOU CODE HERE -- DON'T FORGET TO ADD YOR NAME AT TOP OF FILE
+        // Adds elements from list1 array into hash set
+        for (int i : list1) {
+            setA.add(i);
+        }
 
-        return false;
+        // Checks each element from list2 array with hash set 
+        for (int i : list2) {
+            // Returns false if list2 array has an element not in hash set, thus not a subset
+            if(!setA.contains(i)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
@@ -52,10 +64,20 @@ class ProblemSolutions {
      */
 
     public int findKthLargest(int[] array, int k) {
+        // Initialize a max heap priority queue (reversed order) for largest element at top
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
 
-        // ADD YOUR CODE HERE
+        // Adds elements of array to max heap
+        for (int i : array) {
+            maxHeap.offer(i);
+        }
 
-        return 0;
+        // Removes elements until reaching the k-th element
+        for (int i = 0; i < k - 1; i++) {
+            maxHeap.poll();
+        }
+
+        return maxHeap.peek();
     }
 
 
@@ -73,10 +95,26 @@ class ProblemSolutions {
      */
 
     public int[] sort2Arrays(int[] array1, int[] array2) {
+        PriorityQueue<Integer> combined = new PriorityQueue<>();
+        
+        // Adds all elements from first array into priority queue
+        for (int i : array1) {
+            combined.offer(i);
+        }
 
-        // ADD YOU CODE HERE
+        // Adds all elements from second array into priotity queue
+        for (int j : array2) {
+            combined.offer(j);
+        }
 
-        return null;
+        // Creates new array for storing sorted elements of both arrays
+        int[] sorted = new int[combined.size()];
+        // Removes elements from priority queue and adds to new array, with elements sorted in ascending order
+        for (int k = 0; k < sorted.length; k++) {
+            sorted[k] = combined.poll();
+        }
+
+        return sorted;
     }
 
 }
